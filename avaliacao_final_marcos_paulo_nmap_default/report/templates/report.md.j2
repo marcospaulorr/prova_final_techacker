@@ -1,0 +1,40 @@
+# Avaliacao Final - Marcos Paulo
+
+**Alvo:** {{ data.target }}  
+**Data:** {{ data.timestamp }}
+
+## Resumo
+- ZAP: {{ data.zap.status }}
+- Nikto: {{ data.nikto.status }}
+- Nmap: {{ data.nmap.status }}
+
+## Classificação (OWASP Top 10 - nível introdutório)
+{% for cat, items in data.owasp.items() %}
+- **{{ cat }}**
+  {% if items %}
+  {% for it in items %}
+  - {{ it }}
+  {% endfor %}
+  {% else %}
+  - Sem indícios relevantes.
+  {% endif %}
+{% endfor %}
+
+## Evidências
+### ZAP
+- Saída/relatório: `{{ data.zap.report_html }}`
+```
+{{ (data.zap.raw_output or '')[:3000] }}
+```
+
+### Nikto
+- Relatório: `{{ data.nikto.report_txt }}`
+```
+{{ (data.nikto.raw_output or '')[:3000] }}
+```
+
+### Nmap
+- Relatório: `{{ data.nmap.report_xml }}`
+```
+{{ (data.nmap.raw_output or '')[:3000] }}
+```

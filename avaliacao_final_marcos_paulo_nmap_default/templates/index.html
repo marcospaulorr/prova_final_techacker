@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Avaliacao Final - Marcos Paulo</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+      input[type=text]{ width: 100%; padding: 0.6rem; font-size: 1rem; }
+      button{ padding: 0.6rem 1rem; cursor: pointer; }
+      table{ width: 100%; border-collapse: collapse; margin-top: 1rem; }
+      th,td{ border:1px solid #e5e7eb; padding: 8px; }
+      .muted{ color: #666; }
+      .ok{ color:#0a7d00 }
+      .warn{ color:#a36f00 }
+    </style>
+  </head>
+  <body>
+    <h1>Avaliacao Final - Marcos Paulo</h1>
+    <p class="muted">Digite a URL (ex.: <code>https://example.com</code>) e escolha quais scanners usar. Por padrão, apenas Nmap.</p>
+    <form method="post" action="/scan">
+      <input type="text" name="target" placeholder="https://example.com" required />
+
+      <fieldset style="margin-top:1rem; border:1px solid #e5e7eb; padding:0.75rem;">
+        <legend>Scanners</legend>
+        <label><input type="checkbox" name="svc_nmap" {{ 'checked' if defaults.enable_nmap else '' }}/> Nmap (rápido)</label><br/>
+        <label><input type="checkbox" name="svc_nikto" {{ 'checked' if defaults.enable_nikto else '' }}/> Nikto</label><br/>
+        <label><input type="checkbox" name="svc_zap" {{ 'checked' if defaults.enable_zap else '' }}/> ZAP</label>
+      </fieldset>
+
+      <fieldset style="margin-top:1rem; border:1px solid #e5e7eb; padding:0.75rem;">
+        <legend>Opções do Nmap</legend>
+        <label>Portas: <input type="text" name="nmap_ports" placeholder="80,443" value="{{ defaults.nmap_ports or '' }}" style="width: 50%;"/></label><br/>
+        <label><input type="checkbox" name="fast_mode" {{ 'checked' if defaults.fast_mode else '' }}/> Modo rápido (T4, retries 1, host-timeout curto)</label>
+      </fieldset>
+
+      <p style="margin-top:0.75rem;">
+        <label><input type="checkbox" name="docker_zap" checked /> Usar ZAP via Docker</label>
+      </p>
+
+      <button type="submit">Varrer</button>
+    </form>
+
+    <h2>Histórico</h2>
+    <form method="get" action="/export">
+      <select name="fmt">
+        <option value="csv">CSV</option>
+        <option value="json">JSON</option>
+      </select>
+      <button type="submit">Exportar</button>
+    </form>
+
+    {% if scans %}
+    <table>
+      <thead><tr><th>Data/Hora</th><th>Alvo</th><th>Status</th><th>Relatório</th></tr></thead>
+      <tbody>
+        {% for s in scans %}
+        <tr>
+          <td>{{ s.timestamp }}</td>
+          <td>{{ s.target }}</td>
+          <td>
+            ZAP: <span class="{{ 'ok' if 'ok' in s.summary.zap.status else 'warn' }}">{{ s.summary.zap.status }}</span> · 
+            Nikto: <span class="{{ 'ok' if 'ok' in s.summary.nikto.status else 'warn' }}">{{ s.summary.nikto.status }}</span> · 
+            Nmap: <span class="{{ 'ok' if 'ok' in s.summary.nmap.status else 'warn' }}">{{ s.summary.nmap.status }}</span>
+          </td>
+          <td><a href="/artifacts/{{ s.artifacts_name }}/report.html" target="_blank">HTML</a> · <a href="/artifacts/{{ s.artifacts_name }}/report.md" target="_blank">MD</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="muted">Nenhum scan ainda.</p>
+    {% endif %}
+  </body>
+</html>

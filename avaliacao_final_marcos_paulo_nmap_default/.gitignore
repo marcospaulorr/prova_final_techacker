@@ -1,0 +1,37 @@
+# Python / venv
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Build / dist
+build/
+dist/
+*.egg-info/
+
+# Logs / tmp
+*.log
+tmp/
+*.tmp
+
+# Projeto - artefatos e banco
+artifacts/
+scanner.db
+
+# Relatórios gerados (se quiser ignorar tudo da pasta)
+report/*.html
+report/*.md
+
+# Snapshots do Flask (se houver)
+instance/
+
+# Docker/ZAP (se usar)
+*.zap
+*.session

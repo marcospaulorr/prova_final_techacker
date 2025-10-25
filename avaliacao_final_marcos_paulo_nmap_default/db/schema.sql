@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS scans (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  target TEXT NOT NULL,
+  timestamp TEXT NOT NULL,
+  artifacts_dir TEXT NOT NULL,
+  summary_json TEXT NOT NULL
+);

@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Avaliacao Final - Marcos Paulo</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; }
+    h1,h2 { margin: 0.5rem 0; }
+    pre { background: #f6f8fa; padding: 1rem; overflow-x: auto; }
+    .ok { color: #0a7d00; }
+    .warn { color: #a36f00; }
+    .err { color: #b00020; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: left; }
+  </style>
+</head>
+<body>
+  <h1>Avaliacao Final - Marcos Paulo</h1>
+  <p><strong>Alvo:</strong> {{ data.target }}<br/>
+     <strong>Data:</strong> {{ data.timestamp }}</p>
+
+  <h2>Resumo</h2>
+  <ul>
+    <li>ZAP: <span class="{{ 'ok' if 'ok' in data.zap.status else ('warn' if 'skipped' in data.zap.status else 'err') }}">{{ data.zap.status }}</span></li>
+    <li>Nikto: <span class="{{ 'ok' if 'ok' in data.nikto.status else ('warn' if 'skipped' in data.nikto.status else 'err') }}">{{ data.nikto.status }}</span></li>
+    <li>Nmap: <span class="{{ 'ok' if 'ok' in data.nmap.status else ('warn' if 'skipped' in data.nmap.status else 'err') }}">{{ data.nmap.status }}</span></li>
+  </ul>
+
+  <h2>Classificação (OWASP Top 10 - nível introdutório)</h2>
+  <table>
+    <thead><tr><th>Categoria</th><th>Indícios/Observações</th></tr></thead>
+    <tbody>
+      {% for cat, items in data.owasp.items() %}
+      <tr>
+        <td>{{ cat }}</td>
+        <td>
+          {% if items %}
+            <ul>
+            {% for it in items %}
+              <li>{{ it }}</li>
+            {% endfor %}
+            </ul>
+          {% else %}
+            -
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Evidências</h2>
+  <h3>ZAP</h3>
+  <p>Saída/relatório: <code>{{ data.zap.report_html }}</code></p>
+  <pre>{{ (data.zap.raw_output or '')[:5000] }}</pre>
+
+  <h3>Nikto</h3>
+  <p>Relatório TXT: <code>{{ data.nikto.report_txt }}</code></p>
+  <pre>{{ (data.nikto.raw_output or '')[:5000] }}</pre>
+
+  <h3>Nmap</h3>
+  <p>Relatório XML: <code>{{ data.nmap.report_xml }}</code></p>
+  <pre>{{ (data.nmap.raw_output or '')[:5000] }}</pre>
+
+</body>
+</html>

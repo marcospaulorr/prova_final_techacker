@@ -1,0 +1,16 @@
+timeouts:
+  zap_minutes: 10
+  nikto_minutes: 6
+  nmap_minutes: 3
+
+defaults:
+  enable_zap: false
+  enable_nikto: false
+  enable_nmap: true
+  fast_mode: true
+  nmap_ports: "80,443"
+
+# compat (lidos se defaults não existir)
+fast_mode: true
+nmap_ports: "80,443"
+enable_zap: false
